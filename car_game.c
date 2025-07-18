@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
-#include <fcntl.h>
-#include <termios.h>
-#include <unistd.h>
+// #include <time.h>
+// #include <fcntl.h>
+// #include <termios.h>
+// #include <unistd.h>
 #include <sys/select.h>
+#include "utils/utils.h"
 char getch(void);
 int kbhit(void);
 void delay(int mili);
@@ -56,6 +57,8 @@ void makeEnemy()
 
 void draw()
 {
+	system("clear");
+
 	int kx = 0 , ky = 0 ;
 	printf("-----------CAR-GAME-----------\n");
 	printf("==============================\n");
@@ -247,6 +250,7 @@ void gameloop()
 		update();
 		check();
         	input();
+		
 		delay(200);
         }
 }
@@ -265,6 +269,7 @@ int main()
 
 }
 
+/*
 int kbhit(void)
 {
   struct termios oldt, newt;
@@ -306,3 +311,4 @@ void delay(int mili)
 	clock_t start_time = clock();
 	while(clock() < (start_time + mili*1000));
 }
+*/
