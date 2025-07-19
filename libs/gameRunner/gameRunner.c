@@ -3,8 +3,9 @@
 #include <sys/select.h>
 #include <math.h>
 
-#include "libs/utils/utils.h"
-#include "libs/scoreHandler/scoreHandler.h"
+#include "gameRunner.h"
+#include "../utils/utils.h"
+#include "../scoreHandler/scoreHandler.h"
 
 #define initial_delay 200
 
@@ -17,9 +18,8 @@ int score = 0;
 int out0 = 0 , out1 = 0;
 int speed;
 
-void makeEnemy()
+void make_enemy()
 {
-	//if(ready0==0 && ready1==0)
 	if(readyEnemy==0)
 	{
 		int t = rand()%2;
@@ -29,7 +29,7 @@ void makeEnemy()
 
 }
 
-void draw()
+void draw_game()
 {
 	system("clear");
 
@@ -104,10 +104,8 @@ void draw()
 		printf("\n");
 	}	
 
-
 	printf("==============================\n");
 
-//	printf("\n(A)->left\n(D)->right\n(x)->quit\n");	
 	printf("\nyour Score : %d \n",score);
 	printf("\t\t\t\t\t\tmade by: Aman Chuphal\n");
 
@@ -116,10 +114,9 @@ void draw()
 
 
 
-void update()
+void update_game()
 {
 	// increament enemy position +1
-	
 	for(int i = row-1 ; i>=0 ; i--)
 	{
 		if(enemyArray[i][0]==1)
@@ -131,10 +128,8 @@ void update()
 
 			}
 		}
-
 		if(enemyArray[i][1]==1)
 		{
-
 			enemyArray[i][1] = 0;
 			if(i!=row-1)
 			{
@@ -154,20 +149,19 @@ void update()
 	else if(out1>0) out1--;
 	
 	// calculate score
-	
 	if(enemyArray[row-1][0]==1 || enemyArray[row-1][1]==1) score+=10;
 
 }
 
 
-void check()
+void check_gameover()
 {
 	if(out0>0 && position==0) gameover = 1;
         if(out1>0 && position==1) gameover = 1;
 
 }
 
-void input()
+int input_game()
 {
 	char key;
 	if(kbhit()==1)
@@ -177,26 +171,24 @@ void input()
                 if(key=='x')
                 {
 			gameover = 1;	
-                        exit(0);
+                        return 1;
                 }
 		if(key=='a')
 		{
-			printf("a\n");
 			position = 0;
 		}
 		if(key=='d')
 		{
-			printf("d \n");
 			position = 1;
 		}
 
         }
 
-	
+	return 0;	
 }
 
 
-void setup()
+void setup_game()
 {
 	for(int i = 0;i<30;i++)
 	{
@@ -213,81 +205,26 @@ int appropriate_speed() {
 	return delay < min_delay ? min_delay : (int)delay;	
 }
 
-void gameloop()
+void loop_game()
 {
 	// speed_controler = delay time || less value of variable speed the faster the speed.
 	int speed_controler = initial_delay;
-        while(1)
+        int back = 0;
+	while(1)
         {
 		if(gameover==1)
                 {
-			printf("----|GAME OVER|----\n");
                         save_score(score);
 			break;
                 }
-		makeEnemy();
-		input();
-                draw();
-		update();
-		check();
-        	input();
+		make_enemy();
+		back = back | input_game();
+                draw_game();
+		update_game();
+		check_gameover();
+        	back = back | input_game();
+		if(back) break;
 		speed_controler = appropriate_speed();
 		delay(speed_controler);
         }
 }
-
-
-int main()
-{
-
-	setup();
-	system("clear");
-	gameloop();
-
-	return 0;
-
-}
-
-/*
-int kbhit(void)
-{
-  struct termios oldt, newt;
-  int ch;
-  int oldf;
-
-  tcgetattr(STDIN_FILENO, &oldt);
-  newt = oldt;
-  newt.c_lflag &= ~(ICANON | ECHO);
-  tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-  oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
-  fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
-
-  ch = getchar();
-
-  tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-  fcntl(STDIN_FILENO, F_SETFL, oldf);
-
-  if(ch != EOF)
-  {
-    ungetc(ch, stdin);
-    return 1;
-  }
-
-  return 0;
-}
-
-char getch(void)
-{
-    char c;
-    system("stty raw");
-    c= getchar();
-    system("stty sane");
-    return(c);
-}
-
-void delay(int mili)
-{
-	clock_t start_time = clock();
-	while(clock() < (start_time + mili*1000));
-}
-*/
