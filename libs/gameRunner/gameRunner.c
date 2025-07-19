@@ -11,12 +11,10 @@
 
 int readyEnemy  = 0;
 int position = 0;
-int row = 20 , col = 30;
 int enemyArray[20][2];
 int gameover = 0;
 int score = 0;
 int out0 = 0 , out1 = 0;
-int speed;
 
 void make_enemy()
 {
@@ -29,17 +27,17 @@ void make_enemy()
 
 }
 
-void draw_game()
+void draw_game(int rows)
 {
 	system("clear");
 
 	int kx = 0 , ky = 0 ;
 	printf("-----------CAR-GAME-----------\n");
 	printf("==============================\n");
-	for(int i = 0; i<row ; i++)
+	for(int i = 0; i<rows ; i++)
 	{
 		printf("=");
-		if(i>=row-3)
+		if(i>=rows-3)
 		{
 			if(position==0)
                         {
@@ -72,7 +70,7 @@ void draw_game()
 		printf("=");	
 
 		
-		if(i>=row-3)
+		if(i>=rows-3)
 		{
 			if(position==1)
                         {
@@ -114,15 +112,15 @@ void draw_game()
 
 
 
-void update_game()
+void update_game(int rows)
 {
 	// increament enemy position +1
-	for(int i = row-1 ; i>=0 ; i--)
+	for(int i = rows-1 ; i>=0 ; i--)
 	{
 		if(enemyArray[i][0]==1)
 		{
 			enemyArray[i][0] = 0;
-			if(i!=row-1)
+			if(i!=rows-1)
 			{
 				enemyArray[i+1][0] = 1;
 
@@ -131,7 +129,7 @@ void update_game()
 		if(enemyArray[i][1]==1)
 		{
 			enemyArray[i][1] = 0;
-			if(i!=row-1)
+			if(i!=rows-1)
 			{
 				enemyArray[i+1][1] = 1;
 			}
@@ -142,14 +140,14 @@ void update_game()
 	if(readyEnemy>0) readyEnemy--;
 	
 	// variable to check game over condition
-	if(enemyArray[row-4][0]==1) out0 = 3;
+	if(enemyArray[rows-4][0]==1) out0 = 3;
 	else if(out0>0) out0--;
 	
-	if(enemyArray[row-4][1]==1) out1 = 3;
+	if(enemyArray[rows-4][1]==1) out1 = 3;
 	else if(out1>0) out1--;
 	
 	// calculate score
-	if(enemyArray[row-1][0]==1 || enemyArray[row-1][1]==1) score+=10;
+	if(enemyArray[rows-1][0]==1 || enemyArray[rows-1][1]==1) score+=10;
 
 }
 
@@ -188,14 +186,20 @@ int input_game()
 }
 
 
-void setup_game()
+void setup_game(int rows)
 {
-	for(int i = 0;i<30;i++)
+	for(int i = 0;i<rows;i++)
 	{
 		enemyArray[i][0]=0;
 		enemyArray[i][1]=0;
 	}
 	score = 0;
+	readyEnemy  = 0;
+	position = 0;
+	gameover = 0;
+	out0 = 0;
+       	out1 = 0;
+
 }
 
 int appropriate_speed() {
@@ -205,7 +209,7 @@ int appropriate_speed() {
 	return delay < min_delay ? min_delay : (int)delay;	
 }
 
-void loop_game()
+void loop_game(int rows)
 {
 	// speed_controler = delay time || less value of variable speed the faster the speed.
 	int speed_controler = initial_delay;
@@ -219,8 +223,8 @@ void loop_game()
                 }
 		make_enemy();
 		back = back | input_game();
-                draw_game();
-		update_game();
+                draw_game(rows);
+		update_game(rows);
 		check_gameover();
         	back = back | input_game();
 		if(back) break;

@@ -48,8 +48,8 @@ void input_menu()
                 if(key=='\n')
                 {
 			switch(selected_item) {
-				case 1: setup_game();  //start game
-					loop_game();
+				case 1: setup_game(rows);  //start game
+					loop_game(rows);
 					break;
 				case 2: loop_controls(rows);  // controls
 					break;
