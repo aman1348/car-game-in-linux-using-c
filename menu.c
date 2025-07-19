@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <sys/select.h>
 
 #include "utils/utils.h"
@@ -61,6 +62,32 @@ void draw_controls() {
 
 }
 
+bool input_controls() {
+        char key;
+        if(kbhit()==1)
+        {
+
+                key = getch();
+                if(key=='x')
+                {
+                        // false = break control loop
+                        return false;
+                }
+        }
+        return true;
+
+}
+
+void controls_loop() {
+        bool back = true;
+        // draw once (to avoid printing at every itteration)
+        draw_controls();
+        while(back) {
+                back = input_controls();
+                delay(100);
+        }
+}
+
 
 void input_menu()
 {
@@ -74,8 +101,7 @@ void input_menu()
 			switch(selected_item) {
 				case 1: //start game
 					break;
-				case 2: draw_controls();  // controls
-					delay(5000);
+				case 2: controls_loop();  // controls
 					break;
 				case 3: exit(0);  // exit
 					break;
@@ -105,7 +131,8 @@ void input_menu()
 	
 }
 
-void game_loop() {
+
+void menu_loop() {
 	int blink = 0;
 	while(1) {
 		input_menu();
@@ -117,5 +144,5 @@ void game_loop() {
 }
 
 void main() {
-	game_loop();
+	menu_loop();
 }
