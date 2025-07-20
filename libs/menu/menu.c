@@ -6,6 +6,7 @@
 #include "../controls/controls.h"
 #include "../scoreHandler/scoreHandler.h"
 #include "../gameRunner/gameRunner.h"
+#include "menu.h"
 
 int rows = 20;
 int cols = 30;
@@ -62,12 +63,10 @@ void input_menu()
                 }
 		else if(key=='w')
 		{
-			printf("a\n");
 			selected_item = (selected_item > 1) ? selected_item - 1 : 1;
 		}
 		else if(key=='s')
 		{
-			printf("s \n");
 			selected_item = (selected_item < 4) ? selected_item + 1 : 4;
 		}
 		else if(key=='x')
@@ -93,6 +92,3 @@ void loop_menu() {
 	}
 }
 
-void main() {
-	loop_menu();
-}

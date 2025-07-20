@@ -6,7 +6,7 @@
 #include "../utils/utils.h"
 
 #define MAX_SCORES 10
-#define SCORE_FILE "score.txt"
+#define SCORE_FILE "resources/data/score.txt"
 
 void save_score(int new_score) {
 	// try to mentain the scores in Decending Order
@@ -22,8 +22,6 @@ void save_score(int new_score) {
 
 		    // Insert new score in correct position
 	    		if (!inserted && new_score >= scores[count]) {
-				// for (int j = MAX_SCORES; j > count; --j)
-			    	//	scores[j] = scores[j - 1]; // shift
 				scores[count+1] = scores[count];
 				scores[count] = new_score;
 				inserted = 1;
@@ -58,6 +56,20 @@ void save_score(int new_score) {
 	
 }
 
+void print_score_padded(int score) {
+	int temp = score;
+	int digits = 0;
+	while(temp > 0) {
+		digits++;
+		temp /= 10;
+	}
+	if(score == 0) digits = 1;
+	printf("%d", score);
+	for(int i = 0; i < 6-digits; i++) {
+		printf(" ");
+	}
+}
+
 void draw_scores(int rows) {
 	FILE* file = fopen(SCORE_FILE, "r");
 	int i = 1;
@@ -69,8 +81,14 @@ void draw_scores(int rows) {
 	printf("=           Top Scores       =\n");
 	// Print Scores
 	while(file != NULL && fscanf(file, "%d", &score) != EOF) {		
-		if(i == 10) printf("=    %d.      %d              =\n", i, score); 
-		else printf("=    %d.     %d              =\n", i, score);
+		if(i == 10) {
+			printf("=    %d.     ", i);
+		}
+		else {
+			printf("=    %d.      ", i);
+		}
+		print_score_padded(score);
+		printf("          =\n");
 		i++;
 	}
 	
@@ -84,17 +102,13 @@ void draw_scores(int rows) {
 int input_scores()
 {
 	char key;
-	if(kbhit()==1)
-        {
-
+	if(kbhit()==1) {
                 key = getch();
                 if(key=='x' || key=='\n')
                 {
 			// back
 			return 1;
-                        
                 }
-
         }
 	return 0;	
 }
@@ -109,22 +123,3 @@ void loop_scores(int rows) {
 	}
 }
 
-/*
-void main() {
-	loop_scores(30);
-	save_score(10);
-	loop_scores(30);
-	save_score(20);
-	save_score(30);
-	save_score(40);
-	save_score(50);
-	loop_scores(30);
-	save_score(40);
-	save_score(60);
-	loop_scores(30);
-	save_score(90);
-	save_score(80);
-	save_score(70);
-	loop_scores(30);
-}
-*/
