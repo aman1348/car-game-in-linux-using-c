@@ -22,13 +22,7 @@ A simple car game where the player must dodge incoming cars.
    cd "car-game-in-linux-using-c"
    ```
 
-3. Build the game:
-
-   ```bash
-   ./build.sh
-   ```
-
-4. Run the game:
+3. Run the game:
 
    ```bash
    ./game_runner.sh
